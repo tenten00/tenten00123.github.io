@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Gamedev Canvas Workshop</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <style>
+        canvas { width: 200px; height: 110px; border: 1px solid #000000; border-radius:6px; margin: 3px 3px auto;}
+        .active { border: 3px solid #000000;}
+    </style>
+</head>
+<body>
+
+    <canvas id="myCanvas"></canvas>
+    <canvas id="myCanvas1"></canvas>
+
+    <br>
+    <canvas id="myCanvas2"></canvas>
+
+</body>
+
+
+<script>
+    $("canvas").click(function () {
+        if($(this).hasClass("active")){
+            $(this).removeClass("active");
+        } else {
+            $(this).addClass("active");
+        }
+    });
+
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    var canvas1 = document.getElementById("myCanvas1");
+    var ctx1 = canvas1.getContext("2d");
+    var canvas2 = document.getElementById("myCanvas2");
+    var ctx2 = canvas2.getContext("2d");
+
+
+    draw(ctx, 3, "D", "P", "H");
+    // draw(ctx1, 2, "W", "G", "F");
+    // draw(ctx2, 3, "C", "R", "B");
+
+
+    function ctx_D(ctx, startPoint) {
+        ctx.moveTo(startPoint, 75);
+        ctx.lineTo(startPoint+25, 25);
+        ctx.lineTo(startPoint+50, 75);
+        ctx.lineTo(startPoint+25, 125);
+        ctx.lineTo(startPoint, 75);
+    }
+
+    function ctx_DH(ctx, startPoint) {
+        for(var i = 0; i < 9; i++){
+            var x1 =0, x2 = 0;
+            var y = 35 + (i*10);
+            if(i<5){
+                x1 = startPoint +20 - (i*5);
+                x2 = x1+((i+1)*10);
+            } else {
+                x1 = startPoint -20 + (i*5);
+                x2 = x1+((9-i)*10);
+            }
+            ctx.moveTo(x1, y);
+            ctx.lineTo(x2, y);
+        }
+    }
+
+
+    function ctx_C(ctx, startPoint) {
+        ctx.moveTo(startPoint, 50);
+        ctx.lineTo(startPoint, 100);
+        ctx.arcTo(startPoint, 125, startPoint+25, 125, 25);
+        ctx.arcTo(startPoint+50, 125, startPoint+50, 100, 25);
+        ctx.lineTo(startPoint+50, 50);
+        ctx.arcTo(startPoint+50, 25, startPoint+25, 25, 25);
+        ctx.arcTo(startPoint, 25, startPoint, 50, 25);
+    }
+
+    function ctx_W(ctx, startPoint) {
+        ctx.moveTo(startPoint, 25);
+        ctx.quadraticCurveTo(startPoint+48, 22, startPoint+48, 50);
+        ctx.quadraticCurveTo(startPoint+46, 63, startPoint+38, 80);
+        ctx.quadraticCurveTo(startPoint+23, 100, startPoint+48, 120);
+
+        ctx.quadraticCurveTo(startPoint-17, 120, startPoint+3, 80);
+        ctx.quadraticCurveTo(startPoint+13, 60, startPoint+13, 50);
+        ctx.quadraticCurveTo(startPoint+18, 30, startPoint-5, 22);
+    }
+
+    // C 橢圓型, D菱形, W波浪 @ R紅色, G綠色, P紫色 @ B空白, H斜線, F填滿
+    function draw(ctx, amount, shape, color, stuff) {
+        // ctx.fillStyle = '#ea9f42';
+        // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.beginPath();
+        ctx.lineWidth = 4;
+
+        var x, i;
+        if(amount == 1){
+            x = [125];
+        } else if(amount == 2){
+            x = [80, 170];
+        } else if(amount == 3){
+            x = [50, 125, 200];
+        }
+
+        if (shape == "D") {
+            for(i = 0; i < x.length; i++){
+                ctx_D(ctx, x[i]);
+            }
+        } else if (shape == "C") {
+            for(i = 0; i < x.length; i++){
+                ctx_C(ctx, x[i]);
+            }
+        } else if (shape == "W") {
+            for(i = 0; i < x.length; i++){
+                ctx_W(ctx, x[i]);
+            }
+        }
+
+        if(color == "R"){
+            ctx.strokeStyle="red";
+            ctx.fillStyle="red";
+        } else if(color == "G"){
+            ctx.strokeStyle="green";
+            ctx.fillStyle="green";
+        } else if(color == "P"){
+            ctx.strokeStyle="purple";
+            ctx.fillStyle="purple";
+        }
+        ctx.stroke();
+
+        if(stuff == "B"){
+            ctx.fillStyle="white";
+        } else if(stuff == "H"){
+            //todo
+            ctx.beginPath();
+            ctx.lineWidth = 2;
+            ctx_DH(ctx, 125);
+        } else if(stuff == "P"){
+        }
+        ctx.stroke();
+        ctx.fill();
+    }
+</script>
+</html>
